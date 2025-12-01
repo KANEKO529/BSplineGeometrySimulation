@@ -9,7 +9,6 @@ using System;
 public class BsplineGeometry
 {
 
-    public SimulationManager sim; 
 
     //　制御点データ
     float2[] ctrl;
@@ -36,9 +35,10 @@ public class BsplineGeometry
 
     int Nctrl; // 制御点の総数　1202
     int N;// 120100
-    float ds;
+    public float ds;
     private int k;   // 次数（3）
     private int n;   // 制御点数−1
+    public float[] u;
     private float u_min;
     private float u_max;
 
@@ -51,8 +51,6 @@ public class BsplineGeometry
     public void Initialize()
     {
 
-        sim = new SimulationManager();
-
         // ① CSV読み込みが最初
         ctrl = ReadCSV.ReadControlPoints();
         Nctrl = ctrl.Length;  // ← 1201 or 1202 が入る
@@ -63,6 +61,7 @@ public class BsplineGeometry
 
         // ⑤ 出力配列を確保
         N = 120001;
+        u = new float[N];
         points      = new float2[N];
         derivative1 = new float2[N];
         derivative2 = new float2[N];
@@ -78,7 +77,7 @@ public class BsplineGeometry
         knots3 = SubKnots(knots, 3);
         knots4 = SubKnots(knots, 4);
 
-        Debug.Log("Initialize 完了");
+        Debug.Log("BsplineGeometry Initialize 完了");
     }
 
 
@@ -91,29 +90,27 @@ public class BsplineGeometry
         beta3 = DerivativeCtrl3(beta2);
         beta4 = DerivativeCtrl4(beta3);
 
-        float u0 = knots[k];
-        float u1 = knots[n + 1];
+        u_min = knots[k];
+        u_max = knots[n + 1];
 
         for (int i = 0; i < N; i++)
         {
             float t = (float)i / (N - 1);
-            float u = math.lerp(u0, u1, t);
+            float u_local = math.lerp(u_min, u_max, t);
 
-            points[i]      = CalculateBsplinePoint(u, ctrl, k, knots);
+            u[i] = u_local;
 
-            derivative1[i] = CalculateBsplinePointDerivative(u, beta1, k-1, knots1);
+            points[i]      = CalculateBsplinePoint(u_local, ctrl, k, knots);
 
-            derivative2[i] = CalculateBsplinePointDerivative(u, beta2, k-2, knots2);
+            derivative1[i] = CalculateBsplinePointDerivative(u_local, beta1, k-1, knots1);
 
-            derivative3[i] = CalculateBsplinePointDerivative(u, beta3, k-3, knots3);
+            derivative2[i] = CalculateBsplinePointDerivative(u_local, beta2, k-2, knots2);
 
-            derivative4[i] = CalculateBsplinePointDerivative(u, beta4, k-4, knots4);
+            derivative3[i] = CalculateBsplinePointDerivative(u_local, beta3, k-3, knots3);
+
+            derivative4[i] = CalculateBsplinePointDerivative(u_local, beta4, k-4, knots4);
 
         }
-
-        OutputCSV.OutputBsplineGeometryData(points, derivative1, derivative2, derivative3, derivative4, ds);
-
-        sim.EndSimulation();
     }
 
     float[] SubKnots(float[] knots, int r)
@@ -283,5 +280,13 @@ public class BsplineGeometry
         return (denom == 0) ? 0 : (u - knots[i]) / denom;
     }
 
+    public float GetUMin()
+    {
+        return u_min;
+    }
 
+    public float GetUMax()
+    {
+        return u_max;
+    }
 }
