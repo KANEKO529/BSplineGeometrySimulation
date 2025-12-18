@@ -12,18 +12,22 @@ public class SimulationManager : MonoBehaviour {
     public bool isSimulationRunning = false;  // シミュレーション実行状態
 
     public BsplineGeometry bsplineGeometry;    
+    public BsplineGeometry2 bsplineGeometry2;    
     public PathKinematics pathKinematics;    
 
 
     void Start()
     {
         bsplineGeometry = new BsplineGeometry();
+        bsplineGeometry2 = new BsplineGeometry2();
         pathKinematics = new PathKinematics();
 
 
         // ここで初期化
-        bsplineGeometry.Initialize();
-        pathKinematics.Initialize(bsplineGeometry);
+        // bsplineGeometry.Initialize();
+        bsplineGeometry2.Initialize();
+        // pathKinematics.Initialize(bsplineGeometry);
+        // pathKinematics.Initialize(bsplineGeometry2);
 
     }
 
@@ -47,8 +51,8 @@ public class SimulationManager : MonoBehaviour {
         isSimulationRunning = true;
         Debug.Log("シミュレーション開始");
 
-        bsplineGeometry.CalculationBsplineGeometry();
-        pathKinematics.CalculationPathKinematics();
+        bsplineGeometry2.CalculationBsplineGeometry();
+        // pathKinematics.CalculationPathKinematics();
 
         EndSimulation();
     }
@@ -58,17 +62,29 @@ public class SimulationManager : MonoBehaviour {
         isSimulationRunning = false;
         Debug.Log("シミュレーション終了");
 
+        // OutputCSV.OutputBsplineGeometryData(
+        //     bsplineGeometry.u,
+        //     bsplineGeometry.points, 
+        //     bsplineGeometry.derivative1, 
+        //     bsplineGeometry.derivative2, 
+        //     bsplineGeometry.derivative3, 
+        //     bsplineGeometry.derivative4,
+        //     pathKinematics.cs1,
+        //     pathKinematics.d1c1ds11,
+        //     pathKinematics.d2c1ds12
+        // );
+
         OutputCSV.OutputBsplineGeometryData(
-            bsplineGeometry.u,
-            bsplineGeometry.points, 
-            bsplineGeometry.derivative1, 
-            bsplineGeometry.derivative2, 
-            bsplineGeometry.derivative3, 
-            bsplineGeometry.derivative4,
-            pathKinematics.cs1,
-            pathKinematics.d1c1ds11,
-            pathKinematics.d2c1ds12
-            );
+            // bsplineGeometry2.u,
+            bsplineGeometry2.points
+            // bsplineGeometry2.derivative1, 
+            // bsplineGeometry2.derivative2, 
+            // bsplineGeometry2.derivative3, 
+            // bsplineGeometry2.derivative4,
+            // pathKinematics.cs1,
+            // pathKinematics.d1c1ds11,
+            // pathKinematics.d2c1ds12
+        );
 
         return;
     }

@@ -6,6 +6,7 @@ public class PathKinematics
 {
 
     public BsplineGeometry bsplineGeometry;  // ← 外からセット
+    public BsplineGeometry2 bsplineGeometry2;  // ← 外からセット
 
     public float[] cs1;
     public float[] d1c1ds11;
@@ -41,11 +42,11 @@ public class PathKinematics
 
     private float _formulaOfSquaredD1rx1du11PlusSquaredD1ry1du11;
 
-    public void Initialize(BsplineGeometry geo)
+    public void Initialize(BsplineGeometry2 geo)
     {
-        bsplineGeometry = geo;
+        bsplineGeometry2 = geo;
 
-        int N = bsplineGeometry.points.Length;
+        int N = bsplineGeometry2.points.Length;
         cs1 = new float[N];
         d1c1ds11 = new float[N];
         d2c1ds12 = new float[N];
@@ -142,17 +143,29 @@ public class PathKinematics
 
     public void ComputeUtilitiesForBezierGeometry(int idx)
     {
-        _rx1 = bsplineGeometry.points[idx].x;
-        _ry1 = bsplineGeometry.points[idx].y;
+        // _rx1 = bsplineGeometry.points[idx].x;
+        // _ry1 = bsplineGeometry.points[idx].y;
 
-        _d1rx1du11 = bsplineGeometry.derivative1[idx].x;
-        _d1ry1du11 = bsplineGeometry.derivative1[idx].y;
-        _d2rx1du12 = bsplineGeometry.derivative2[idx].x;
-        _d2ry1du12 = bsplineGeometry.derivative2[idx].y;
-        _d3rx1du13 = bsplineGeometry.derivative3[idx].x;
-        _d3ry1du13 = bsplineGeometry.derivative3[idx].y;
-        _d4rx1du14 = bsplineGeometry.derivative4[idx].x;
-        _d4ry1du14 = bsplineGeometry.derivative4[idx].y;
+        // _d1rx1du11 = bsplineGeometry.derivative1[idx].x;
+        // _d1ry1du11 = bsplineGeometry.derivative1[idx].y;
+        // _d2rx1du12 = bsplineGeometry.derivative2[idx].x;
+        // _d2ry1du12 = bsplineGeometry.derivative2[idx].y;
+        // _d3rx1du13 = bsplineGeometry.derivative3[idx].x;
+        // _d3ry1du13 = bsplineGeometry.derivative3[idx].y;
+        // _d4rx1du14 = bsplineGeometry.derivative4[idx].x;
+        // _d4ry1du14 = bsplineGeometry.derivative4[idx].y;
+
+        _rx1 = bsplineGeometry2.points[idx].x;
+        _ry1 = bsplineGeometry2.points[idx].y;
+
+        _d1rx1du11 = bsplineGeometry2.derivative1[idx].x;
+        _d1ry1du11 = bsplineGeometry2.derivative1[idx].y;
+        _d2rx1du12 = bsplineGeometry2.derivative2[idx].x;
+        _d2ry1du12 = bsplineGeometry2.derivative2[idx].y;
+        _d3rx1du13 = bsplineGeometry2.derivative3[idx].x;
+        _d3ry1du13 = bsplineGeometry2.derivative3[idx].y;
+        _d4rx1du14 = bsplineGeometry2.derivative4[idx].x;
+        _d4ry1du14 = bsplineGeometry2.derivative4[idx].y;
 
         _squaredRx1 = Mathf.Pow(_rx1,2);
         _squaredRy1 = Mathf.Pow(_ry1,2);

@@ -60,7 +60,9 @@ public class BsplineGeometry
         n = Nctrl - 1;      // ← 1201
 
         // ⑤ 出力配列を確保
-        N = 120001;
+        // N = 120001;
+        N = 200001;
+
         u = new float[N];
         points      = new float2[N];
         derivative1 = new float2[N];
@@ -101,7 +103,7 @@ public class BsplineGeometry
 
             u[i] = u_local;
 
-            points[i]      = CalculateBsplinePoint(u_local, ctrl, k, knots);
+            points[i] = CalculateBsplinePoint(u_local, ctrl, k, knots);
 
             EvaluateDerivativesAtU(u_local, i);
         }
